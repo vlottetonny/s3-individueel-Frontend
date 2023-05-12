@@ -8,6 +8,8 @@ import ProfileTab from "./src/pages/ProfileTab";
 import SettingsTab from "./src/pages/SettingsTab";
 
 const App: React.FC = () => {
+    //disable warnings doesn't work :( v
+    //                  console.disableYellowBox = true;
     const [selectedIndex, setSelectedIndex] = useState(1);
 
     const handleSettingsPress = () => {

@@ -3,7 +3,7 @@ import {StyleSheet, View, Text, Button, Modal, ScrollView} from "react-native";
 import ListItem from "./ListItem";
 
 type ListProps = {
-    groceries: GroceryItem[];
+    groceries: any[]; //groceries: GroceryItem[]; gives a ts error so i rather use any, not sure if this is the right way to do it
 };
 
 const List = ({ groceries }: ListProps) => {

@@ -38,9 +38,11 @@ const ListItem = ({ grocery }: ListItemProps) => {
                 </View>
             </TouchableOpacity>
             <View style={styles.itemInfo}>
-                <Text style={styles.mainText}>{grocery.main_text}</Text>
+                <Text style={styles.mainText} numberOfLines={grocery.sub_text ? 1 : 3}>
+                    {grocery.main_text}
+                </Text>
                 {grocery.sub_text && (
-                    <Text style={styles.subText}>{grocery.sub_text}</Text>
+                    <Text style={styles.subText} numberOfLines={2}>{grocery.sub_text}</Text>
                 )}
             </View>
         </View>

@@ -7,29 +7,41 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const GroceriesTab = () => {
 
-    const [userId, setUserId] = useState<number | null>(null);
-    useEffect(() => {
-        getUserId();
-    }, []);
+    const [userId, setUserId] = useState<number>();
+
     const getUserId = async () => {
         try {
             const userId = await AsyncStorage.getItem('userId');
             if (userId !== null) {
                 console.log('User ID retrieved successfully: ', userId);
+                setUserId(parseInt(userId));
             } else {
                 console.log('No user ID found.');
             }
-        } catch (error: any) {
+        } catch (error) {
             console.log('Error retrieving user ID: ', error);
         }
-    };
+    }
+
+    useEffect(() => {
+        getUserId();
+    }, []);
 
     const [groceries, setGroceries] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/api/grocery-lists/1')
-            .then(response => response.json())
-            .then(data => setGroceries(data.items));
+        AsyncStorage.getItem('userId')
+            .then(userId => {
+                if (userId !== null) {
+                    fetch(`http://localhost:3000/api/grocery-lists/${userId}`)
+                        .then(response => response.json())
+                        .then(data => setGroceries(data.items))
+                        .catch(error => console.log('Error fetching grocery items: ', error));
+                } else {
+                    console.log('No user ID found.');
+                }
+            })
+            .catch(error => console.log('Error retrieving user ID: ', error));
     }, []);
 
     const bottomSheetRef = useRef<BottomSheet>(null);
@@ -44,7 +56,7 @@ const GroceriesTab = () => {
         <View style={styles.pageWrapper}>
             <View style={styles.backgroundContainer}>
                 <View style={styles.TopContainer}>
-                    <Text style={styles.title}>lorem {userId}</Text>
+                    {userId && <Text style={styles.title}>User ID: {userId}</Text>}
                 </View>
                 <Text style={styles.title}>GroceriesTab</Text>
             </View>
@@ -83,6 +95,7 @@ const styles = StyleSheet.create({
         bottom: '11%',
         height: '78%',
         width: '100%',
+        backgroundColor: '#fff',
     },
     TopContainer: {
 

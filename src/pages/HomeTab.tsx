@@ -12,10 +12,8 @@ const setUserId = async (userId: number) => {
     }
 }
 
-setUserId(123456);
-
-
 const HomeTab = () => {
+    setUserId(1)
     return (
         <View style={styles.container}>
             <Text style={styles.title}>HomeTab</Text>
