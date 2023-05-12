@@ -31,9 +31,9 @@ const ListItem = ({ grocery }: ListItemProps) => {
             <TouchableOpacity onPress={() => setIsChecked(!isChecked)}>
                 <View style={styles.checkBox}>
                     {isChecked ? (
-                        <Ionicons name="checkmark-circle" size={24} color="#ff69b4" />
+                        <Ionicons name="checkmark-circle" size={40} color="#ff69b4" />
                     ) : (
-                        <Ionicons name="ellipse-outline" size={24} color="#ff69b4" />
+                        <Ionicons name="ellipse-outline" size={40} color="#ff69b4" />
                     )}
                 </View>
             </TouchableOpacity>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         paddingLeft: 7,
     },
     mainText: {
-        fontSize: 20,
+        fontSize: 19,
     },
     subText: {
         fontSize: 15,
