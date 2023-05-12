@@ -11,48 +11,42 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 interface GroceryItem {
-    groceryText: string;
-    grocerySubText: string;
+    id: number;
+    main_text: string;
+    sub_text: string | null;
+    in_basket: boolean;
+    added_by_id: number;
+    grocery_list_id: number;
 }
 
-const ListItem = () => {
-    const [isChecked, setIsChecked] = useState(false);
-    const [grocery, setGrocery] = useState<GroceryItem[]>([]);
-    const [loading, setLoading] = useState(true);
+type ListItemProps = {
+    grocery: GroceryItem;
+};
 
-    const url = "http://localhost:3000/api/groceries/1";
-
-    useEffect(() => {
-        fetch(url)
-            .then((response) => response.json())
-            .then((data) => setGrocery([data]))
-            .catch((error) => console.error(error))
-            .finally(() => setLoading(false));
-    }, []);
+const ListItem = ({ grocery }: ListItemProps) => {
+    const [isChecked, setIsChecked] = useState(grocery.in_basket);
 
     return (
         <View style={styles.itemWrapper}>
-            <Pressable
-                style={styles.checkBox}
-                onPress={() => setIsChecked(!isChecked)}
-            >
-                {isChecked ? (
-                    <Ionicons name="checkmark-circle-outline" size={50} color="black" />
-                ) : (
-                    <Ionicons name="ellipse-outline" size={50} color="black" />
-                )}
-            </Pressable>
-            {loading ? (
-                <Text>Loading...</Text>
-            ) : (
-                <View style={styles.itemInfo}>
-                    <Text style={styles.mainText}>{grocery[0].groceryText}</Text>
-                    <Text style={styles.subText}>{grocery[0].grocerySubText}</Text>
+            <TouchableOpacity onPress={() => setIsChecked(!isChecked)}>
+                <View style={styles.checkBox}>
+                    {isChecked ? (
+                        <Ionicons name="checkmark-circle" size={24} color="#ff69b4" />
+                    ) : (
+                        <Ionicons name="ellipse-outline" size={24} color="#ff69b4" />
+                    )}
                 </View>
-            )}
+            </TouchableOpacity>
+            <View style={styles.itemInfo}>
+                <Text style={styles.mainText}>{grocery.main_text}</Text>
+                {grocery.sub_text && (
+                    <Text style={styles.subText}>{grocery.sub_text}</Text>
+                )}
+            </View>
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     itemWrapper: {

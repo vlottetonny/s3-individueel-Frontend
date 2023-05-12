@@ -2,15 +2,40 @@ import List from "../components/List";
 import BottomSheet from "@gorhom/bottom-sheet";
 import React, {useCallback, useMemo, useRef} from "react";
 import {StyleSheet, Text, View, TextInput, TouchableOpacity} from "react-native";
+import { useEffect, useState } from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const GroceriesTab = () => {
-    // ref
+
+    const [userId, setUserId] = useState<number | null>(null);
+    useEffect(() => {
+        getUserId();
+    }, []);
+    const getUserId = async () => {
+        try {
+            const userId = await AsyncStorage.getItem('userId');
+            if (userId !== null) {
+                console.log('User ID retrieved successfully: ', userId);
+            } else {
+                console.log('No user ID found.');
+            }
+        } catch (error: any) {
+            console.log('Error retrieving user ID: ', error);
+        }
+    };
+
+    const [groceries, setGroceries] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:3000/api/grocery-lists/1')
+            .then(response => response.json())
+            .then(data => setGroceries(data.items));
+    }, []);
+
     const bottomSheetRef = useRef<BottomSheet>(null);
 
-    // variables
-    const snapPoints = useMemo(() => ['11%', '75%'], []);
+    const snapPoints = useMemo(() => ['12%', '75%'], []);
 
-    // callbacks
     const handleSheetChanges = useCallback((index: number) => {
         console.log('handleSheetChanges', index);
     }, []);
@@ -19,7 +44,7 @@ const GroceriesTab = () => {
         <View style={styles.pageWrapper}>
             <View style={styles.backgroundContainer}>
                 <View style={styles.TopContainer}>
-                    <Text style={styles.title}>lorem</Text>
+                    <Text style={styles.title}>lorem {userId}</Text>
                 </View>
                 <Text style={styles.title}>GroceriesTab</Text>
             </View>
@@ -30,7 +55,8 @@ const GroceriesTab = () => {
                 onChange={handleSheetChanges}
                 style={styles.bottomSheet}
             >
-                <List />
+                <List groceries={groceries} />
+
                 <View style={styles.addItemWrapper}>
                     <TextInput
                         style={styles.addItemTextInput}

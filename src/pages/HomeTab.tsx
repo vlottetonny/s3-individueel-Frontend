@@ -1,5 +1,19 @@
 import React from 'react';
 import {StyleSheet, View, Text, Button, Modal, ScrollView, TouchableOpacity, Pressable} from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+const setUserId = async (userId: number) => {
+    try {
+        await AsyncStorage.setItem('userId', String(userId));
+        console.log('User ID stored successfully.');
+    } catch (error) {
+        console.log('Error storing user ID: ', error);
+    }
+}
+
+setUserId(123456);
+
 
 const HomeTab = () => {
     return (
