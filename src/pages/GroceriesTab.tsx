@@ -157,9 +157,9 @@ const GroceriesTab = () => {
           ) : (
             <TouchableOpacity
               style={styles.addItemButton}
-              onPress={
+              onPress={() => {
                 userId !== null ? handleAddItem : setVisibleAddItemModal
-              }>
+              }}>
               <Text style={styles.buttonText}>-</Text>
             </TouchableOpacity>
           )}

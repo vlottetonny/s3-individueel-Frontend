@@ -6,11 +6,13 @@ import GroceriesTab from "./src/pages/GroceriesTab";
 import HomeTab from "./src/pages/HomeTab";
 import ProfileTab from "./src/pages/ProfileTab";
 import SettingsTab from "./src/pages/SettingsTab";
+import LoginTab from "./src/pages/LoginTab";
+import SignUpTab from "./src/pages/SignUpTab";
 
 const App: React.FC = () => {
     //disable warnings doesn't work :( v
     //                 console.disableYellowBox = true;
-    const [selectedIndex, setSelectedIndex] = useState(1);
+    const [selectedIndex, setSelectedIndex] = useState(4);
 
     const handleSettingsPress = () => {
         setSelectedIndex(3);
@@ -34,7 +36,13 @@ const App: React.FC = () => {
             {selectedIndex === 3 && (
                 <SettingsTab/>
             )}
-            <TabBar selectedIndex={selectedIndex} onItemSelected={handleTabPress} />
+            {selectedIndex === 4 && (
+                <LoginTab onItemSelected={handleTabPress} selectedIndex={selectedIndex}/>
+            )}
+            {selectedIndex === 5 && (
+            <SignUpTab/>
+            )}
+            {selectedIndex !== 4 && selectedIndex !== 5  && (<TabBar selectedIndex={selectedIndex} onItemSelected={handleTabPress} />)}
         </View>
     );
 };
