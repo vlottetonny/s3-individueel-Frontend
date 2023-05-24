@@ -13,7 +13,6 @@ const setUserId = async (userId: number) => {
 }
 
 const HomeTab = () => {
-    setUserId(1)
     return (
         <View style={styles.container}>
             <Text style={styles.title}>HomeTab</Text>
