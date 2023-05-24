@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     // shadowRadius: 2.22,
     elevation: 3,
     marginBottom: 10,
-    marginRight: '17%',
+    marginRight: '18%',
     color: '#f68b45',
   },
   subItemTextInput: {
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     // shadowOpacity: 0.22,
     // shadowRadius: 2.22,
     elevation: 3,
-    marginRight: '17%',
+    marginRight: '18%',
     color: '#f68b45',
   },
   addItemButton: {
