@@ -25,7 +25,7 @@ const LoginTab: React.FC<TabBarProps> = ({onItemSelected}) => {
         const password = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, unhashedPassword);
         const credentials = {username, password};
 
-        const response = await fetch('http://localhost:3000/api/user/login', {
+        const response = await fetch('https://s3individueelapi.azurewebsites.net/api/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -40,9 +40,10 @@ const LoginTab: React.FC<TabBarProps> = ({onItemSelected}) => {
           try {
             await AsyncStorage.setItem('userId', String(data.userId));
             await AsyncStorage.setItem('authToken', String(data.authToken));
-            console.log('User ID stored successfully.');
+            await AsyncStorage.setItem('currentGroceryListId', String(data.currentGroceryListId));
+            console.log('User data stored successfully.');
           } catch (error) {
-            console.log('Error storing user ID:', error);
+            console.log('Error storing data:', error);
           }
           onItemSelected(1);
         } else {
@@ -74,6 +75,7 @@ const LoginTab: React.FC<TabBarProps> = ({onItemSelected}) => {
             onChangeText={text => setUsername(text)}
             secureTextEntry={false}
             value={username}
+            autoCapitalize="none"
         />
         <TextInput
             style={styles.input}

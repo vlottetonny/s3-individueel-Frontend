@@ -55,6 +55,12 @@ const GroceriesTab = () => {
       .catch(error => console.log('Error retrieving user ID: ', error));
   }, []);
 
+  //get data from async storage
+    const getCurrentGroceryListId= async () => {
+      const listId = await AsyncStorage.getItem('currentGroceryListId')
+      return listId;
+    }
+
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const snapPoints = useMemo(() => ['12%', '75%'], []);
@@ -70,7 +76,7 @@ const GroceriesTab = () => {
         main_text: itemTitle,
         sub_text: itemInfo,
         added_by_id: userId,
-        grocery_list_id: 1,
+        grocery_list_id: getCurrentGroceryListId(),
       };
 
       fetch('https://s3individueelapi.azurewebsites.net/api/groceryitem/add', {
@@ -88,7 +94,7 @@ const GroceriesTab = () => {
             .then(userId => {
               if (userId !== null) {
                 fetch(
-                  `https://s3individueelapi.azurewebsites.net/api/grocerylist/get/${userId}`,
+                  `https://s3individueelapi.azurewebsites.net/api/grocerylist/get/${getCurrentGroceryListId()}`,
                 )
                   .then(response => response.json())
                   .then(data => setGroceries(data.items))
