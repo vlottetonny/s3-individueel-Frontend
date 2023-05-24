@@ -23,7 +23,6 @@ const GroceriesTab = () => {
     try {
       const userId = await AsyncStorage.getItem('userId');
       if (userId !== null) {
-        console.log('User ID retrieved successfully: ', userId);
         setUserId(parseInt(userId));
       } else {
         console.log('No user ID found.');
@@ -60,9 +59,9 @@ const GroceriesTab = () => {
 
   const snapPoints = useMemo(() => ['12%', '75%'], []);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
-  }, []);
+  // const handleSheetChanges = useCallback((index: number) => {
+  //   console.log('handleSheetChanges', index);
+  // }, []);
 
   const handleAddItem = () => {
     setVisibleAddItemModal(false);
@@ -123,7 +122,7 @@ const GroceriesTab = () => {
         ref={bottomSheetRef}
         index={1}
         snapPoints={snapPoints}
-        onChange={handleSheetChanges}
+        //onChange={handleSheetChanges}
         style={styles.bottomSheet}>
         <List groceries={groceries} />
 
@@ -133,14 +132,14 @@ const GroceriesTab = () => {
               <TextInput
                 style={styles.mainItemTextInput}
                 placeholder="Item title"
-                placeholderTextColor="white"
+                placeholderTextColor="gray"
                 value={itemTitle}
                 onChangeText={setItemTitle}
               />
               <TextInput
                 style={styles.subItemTextInput}
                 placeholder="Extra item information"
-                placeholderTextColor="white"
+                placeholderTextColor="gray"
                 value={itemInfo}
                 onChangeText={setItemInfo}
               />
@@ -157,10 +156,10 @@ const GroceriesTab = () => {
           ) : (
             <TouchableOpacity
               style={styles.addItemButton}
-              onPress={() => {
-                userId !== null ? handleAddItem : setVisibleAddItemModal
-              }}>
-              <Text style={styles.buttonText}>-</Text>
+              onPress={
+                userId !== null ? handleAddItem : () => setVisibleAddItemModal
+              }>
+              <Text style={styles.buttonText}>+</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -180,7 +179,7 @@ const styles = StyleSheet.create({
     bottom: '11%',
     height: '78%',
     width: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: '#f5e4d4',
   },
   TopContainer: {},
   title: {
@@ -201,71 +200,79 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   mainItemTextInput: {
-    backgroundColor: 'rgba(255, 192, 203, 0.99)',
+    backgroundColor: 'white',
     height: 60,
     flex: 1,
     borderRadius: 30,
+    borderWidth: 1,
+    borderColor: '#f68b45',
     padding: 30,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.22,
+    // shadowRadius: 2.22,
     elevation: 3,
     marginBottom: 10,
     marginRight: '17%',
+    color: '#f68b45',
   },
   subItemTextInput: {
-    backgroundColor: 'rgba(255, 192, 203, 0.99)',
+    backgroundColor: 'white',
     height: 60,
     flex: 1,
     borderRadius: 30,
+    borderWidth: 1,
+    borderColor: '#f68b45',
     padding: 30,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.22,
+    // shadowRadius: 2.22,
     elevation: 3,
     marginRight: '17%',
+    color: '#f68b45',
   },
   addItemButton: {
-    backgroundColor: 'rgba(255, 192, 203, 0.99)',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     height: 60,
     width: 60,
     borderRadius: 40,
+    borderWidth: 1,
+    borderColor: '#f68b45',
     marginLeft: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.22,
+    // shadowRadius: 2.22,
     elevation: 3,
     position: 'absolute',
     bottom: 0,
     right: 10,
   },
   buttonText: {
-    color: 'white',
+    color: '#f68b45',
     fontSize: 30,
   },
   bottomSheet: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    elevation: 3,
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.22,
+    // shadowRadius: 2.22,
+    // elevation: 3,
   },
 });
 

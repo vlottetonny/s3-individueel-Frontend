@@ -13,19 +13,19 @@ interface TabBarItem {
 const tabBarItems: TabBarItem[] = [
     {
         label: 'Groceries',
-        icon: <Ionicons name="ios-basket-outline" size={24} color="black" />,
+        icon: <Ionicons name="ios-basket-outline" size={24} color="#f5e4d4" />,
         selectedIcon: <Ionicons name="ios-basket" size={24} color="white" />,
         onPress: () => {},
     },
     {
         label: 'Home',
-        icon: <Ionicons name="ios-home-outline" size={24} color="black" />,
+        icon: <Ionicons name="ios-home-outline" size={24} color="#f5e4d4" />,
         selectedIcon: <Ionicons name="ios-home" size={24} color="white" />,
         onPress: () => {},
     },
     {
         label: 'Profile',
-        icon: <Ionicons name="ios-person-outline" size={24} color="black" />,
+        icon: <Ionicons name="ios-person-outline" size={24} color="#f5e4d4" />,
         selectedIcon: <Ionicons name="ios-person" size={24} color="white" />,
         onPress: () => {},
     },
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        backgroundColor: 'pink',
+        backgroundColor: '#f68b45',
         height: 75,
         width: '100%',
 
@@ -88,12 +88,12 @@ const styles = StyleSheet.create({
         paddingBottom: 25,
     },
     selectedItem: {
-        backgroundColor: 'pink',
+        //backgroundColor: '#f47d31',
     },
     label: {
         fontSize: 12,
         marginTop: 5,
-        color: '#333',
+        color: '#f5e4d4',
     },
     selectedLabel: {
         color: '#fff',

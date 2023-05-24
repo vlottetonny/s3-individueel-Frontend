@@ -10,8 +10,7 @@ import LoginTab from "./src/pages/LoginTab";
 import SignUpTab from "./src/pages/SignUpTab";
 
 const App: React.FC = () => {
-    //disable warnings doesn't work :( v
-    //                 console.disableYellowBox = true;
+
     const [selectedIndex, setSelectedIndex] = useState(4);
 
     const handleSettingsPress = () => {
@@ -50,7 +49,7 @@ const App: React.FC = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#f5e4d4',
         alignItems: 'center',
         justifyContent: 'center',
     },

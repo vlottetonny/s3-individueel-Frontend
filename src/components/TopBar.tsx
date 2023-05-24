@@ -1,23 +1,34 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useFonts} from "expo-font";
 
 interface TopBarProps {
     onSettingsPress: () => void;
 }
 
 const TopBar: React.FC<TopBarProps> = ({ onSettingsPress }) => {
+    const [loaded] = useFonts({
+        'Knicknack-Regular': require('../assets/fonts/Knicknack-Regular.ttf'),
+    });
+    if (!loaded) {
+        return null;
+    }
+
     return (
         <View style={styles.topBar}>
             <TouchableOpacity style={styles.shareButton}>
-                <Ionicons name="ios-share-outline" size={30} color="black" />
+                <Ionicons name="ios-share-outline" size={30} color="white" />
             </TouchableOpacity>
-            <Text style={styles.header}>HouseKeeper</Text>
+            <View style={styles.headerWrapper}>
+            <Image style={styles.logo} source={require('../assets/images/logoWhite.png')} />
+            <Text style={styles.header} >HouseKeeper</Text>
+            </View>
             <TouchableOpacity
                 style={styles.settingsButton}
                 onPress={onSettingsPress}
             >
-                <Ionicons name="settings-outline" size={30} color="black" />
+                <Ionicons name="settings-outline" size={30} color="white" />
             </TouchableOpacity>
         </View>
     );
@@ -25,7 +36,7 @@ const TopBar: React.FC<TopBarProps> = ({ onSettingsPress }) => {
 
 const styles = StyleSheet.create({
     topBar: {
-        backgroundColor: 'pink',
+        backgroundColor: '#f68b45',
         height: 100,
         width: '100%',
         position: 'absolute',
@@ -47,9 +58,20 @@ const styles = StyleSheet.create({
     shareButton: {
         marginLeft: 20,
     },
+    headerWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    logo: {
+        height: 30,
+        width: 30,
+    },
     header: {
         fontSize: 25,
-        fontWeight: 'bold',
+        fontFamily: 'Knicknack-Regular',
+        color: '#fff',
+        marginTop: 15,
+        marginLeft: 5,
     },
     settingsButton: {
         marginRight: 20,
