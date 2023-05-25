@@ -110,7 +110,6 @@ const GroceriesTab = () => {
         .catch(error => {
           console.log('Error adding item:', error);
         });
-
       setItemTitle('');
       setItemInfo('');
     }
