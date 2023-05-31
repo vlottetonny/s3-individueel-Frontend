@@ -85,6 +85,7 @@ const SignUpTab: React.FC<TabBarProps> = ({onItemSelected}) => {
 
                 if (data.success) {
                     try {
+                        console.log(data)
                         await AsyncStorage.setItem('userId', String(data.userId));
                         await AsyncStorage.setItem('authToken', String(data.authToken));
                         await AsyncStorage.setItem('currentGroceryListId', String(data.currentGroceryListId));

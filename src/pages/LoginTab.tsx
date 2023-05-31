@@ -35,10 +35,11 @@ const LoginTab: React.FC<TabBarProps> = ({onItemSelected}) => {
 
         if (data.success) {
           try {
+            console.log(data)
             await AsyncStorage.setItem('userId', String(data.userId));
             await AsyncStorage.setItem('authToken', String(data.authToken));
             await AsyncStorage.setItem('currentGroceryListId', String(data.currentGroceryListId));
-            console.log('User data stored successfully.');
+            console.log('User data stored successfully.' + await AsyncStorage.getItem('currentGroceryListId'));
           } catch (error) {
             console.log('Error storing data:', error);
           }

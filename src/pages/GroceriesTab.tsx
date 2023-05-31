@@ -1,6 +1,6 @@
 import List from '../components/List';
 import BottomSheet from '@gorhom/bottom-sheet';
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,167 +9,140 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+type GroceryItem = {
+  main_text: string;
+  sub_text: string;
+  added_by_id: number | undefined;
+  grocery_list_id: string;
+};
 
 const GroceriesTab = () => {
   const [userId, setUserId] = useState<number>();
   const [visibleAddItemModal, setVisibleAddItemModal] = useState(false);
-  const [groceries, setGroceries] = useState([]);
+  const [groceries, setGroceries] = useState<GroceryItem[]>([]);
   const [itemTitle, setItemTitle] = useState('');
   const [itemInfo, setItemInfo] = useState('');
+  const [currentGroceryListId, setCurrentGroceryListId] = useState('');
 
-  const getUserId = async () => {
-    try {
-      const userId = await AsyncStorage.getItem('userId');
-      if (userId !== null) {
-        setUserId(parseInt(userId));
-      } else {
-        console.log('No user ID found.');
-      }
-    } catch (error) {
-      console.log('Error retrieving user ID: ', error);
-    }
-  };
-
-  useEffect(() => {
-    getUserId();
-  }, []);
-
-  useEffect(() => {
-    AsyncStorage.getItem('userId')
-      .then(userId => {
-        if (userId !== null) {
-          fetch(
-            `https://s3individueelapi.azurewebsites.net/api/grocerylist/get/${userId}`,
-          )
-            .then(response => response.json())
-            .then(data => setGroceries(data.items))
-            .catch(error =>
-              console.log('Error fetching grocery items: ', error),
-            );
-        } else {
-          console.log('No user ID found.');
-        }
-      })
-      .catch(error => console.log('Error retrieving user ID: ', error));
-  }, []);
-
-  //get data from async storage
-    const getCurrentGroceryListId= async () => {
-      const listId = await AsyncStorage.getItem('currentGroceryListId')
-      return listId;
-    }
-
-  const bottomSheetRef = useRef<BottomSheet>(null);
-
+  const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ['12%', '75%'], []);
 
-  // const handleSheetChanges = useCallback((index: number) => {
-  //   console.log('handleSheetChanges', index);
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const listId = await AsyncStorage.getItem('currentGroceryListId');
+        setCurrentGroceryListId(listId as string);
+        // Make API request using the listId to fetch groceries data
+        const response = await fetch(`http://localhost:3000/api/grocerylist/get/${listId}`);
+        const data = await response.json();
+        console.log(data);
+        setGroceries(data.items);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
     setVisibleAddItemModal(false);
     if (itemTitle !== '') {
-      const itemData = {
+      const itemData: GroceryItem = {
         main_text: itemTitle,
         sub_text: itemInfo,
-        added_by_id: userId,
-        grocery_list_id: getCurrentGroceryListId(),
+        added_by_id: await AsyncStorage.getItem('userId') as unknown as number,
+        grocery_list_id: await AsyncStorage.getItem('currentGroceryListId') as string,
       };
 
-      fetch('https://s3individueelapi.azurewebsites.net/api/groceryitem/add', {
+      const response = await fetch('http://localhost:3000/api/groceryitem/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(itemData),
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Item added successfully:', data);
-          // Fetch the updated list of groceries
-          AsyncStorage.getItem('userId')
-            .then(userId => {
-              if (userId !== null) {
-                fetch(
-                  `https://s3individueelapi.azurewebsites.net/api/grocerylist/get/${getCurrentGroceryListId()}`,
-                )
-                  .then(response => response.json())
-                  .then(data => setGroceries(data.items))
-                  .catch(error =>
-                    console.log('Error fetching grocery items: ', error),
-                  );
-              } else {
-                console.log('No user ID found.');
-              }
-            })
-            .catch(error => console.log('Error retrieving user ID: ', error));
-        })
-        .catch(error => {
-          console.log('Error adding item:', error);
-        });
-      setItemTitle('');
-      setItemInfo('');
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setGroceries([...groceries, itemData]);
+      }
     }
+    setItemTitle('');
+    setItemInfo('');
+
+    // Refetch the updated groceries list
+    const fetchData = async () => {
+      try {
+        const listId = await AsyncStorage.getItem('currentGroceryListId');
+        setCurrentGroceryListId(listId as string);
+        const response = await fetch(`http://localhost:3000/api/grocerylist/get/${listId}`);
+        const data = await response.json();
+        setGroceries(data.items);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
   };
 
-  return (
-    <View style={styles.pageWrapper}>
-      <View style={styles.backgroundContainer}>
-        <View style={styles.TopContainer}>
-          {userId && <Text style={styles.title}>User ID: {userId}</Text>}
-        </View>
-        <Text style={styles.title}>GroceriesTab</Text>
-      </View>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={1}
-        snapPoints={snapPoints}
-        //onChange={handleSheetChanges}
-        style={styles.bottomSheet}>
-        <List groceries={groceries} />
 
-        <View style={styles.addItemWrapper}>
-          {visibleAddItemModal && (
-            <View style={styles.textInputWrapper}>
-              <TextInput
-                style={styles.mainItemTextInput}
-                placeholder="Item title"
-                placeholderTextColor="gray"
-                value={itemTitle}
-                onChangeText={setItemTitle}
-              />
-              <TextInput
-                style={styles.subItemTextInput}
-                placeholder="Extra item information"
-                placeholderTextColor="gray"
-                value={itemInfo}
-                onChangeText={setItemInfo}
-              />
-            </View>
-          )}
-          {!visibleAddItemModal ? (
-            <TouchableOpacity
-              style={styles.addItemButton}
-              onPress={() => {
-                setVisibleAddItemModal(!visibleAddItemModal);
-              }}>
-              <Text style={styles.buttonText}>+</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.addItemButton}
-              onPress={
-                userId !== null ? handleAddItem : () => setVisibleAddItemModal
-              }>
-              <Text style={styles.buttonText}>+</Text>
-            </TouchableOpacity>
-          )}
+  return (
+      <View style={styles.pageWrapper}>
+        <View style={styles.backgroundContainer}>
+          <View style={styles.TopContainer}>
+            {userId && <Text style={styles.title}>User ID: {userId}</Text>}
+          </View>
+          <Text style={styles.title}>GroceriesTab</Text>
         </View>
-      </BottomSheet>
-    </View>
+        <BottomSheet
+            ref={bottomSheetRef}
+            index={1}
+            snapPoints={snapPoints}
+            style={styles.bottomSheet}>
+          <List groceries={groceries} />
+
+          <View style={styles.addItemWrapper}>
+            {visibleAddItemModal && (
+                <View style={styles.textInputWrapper}>
+                  <TextInput
+                      style={styles.mainItemTextInput}
+                      placeholder="Item title"
+                      placeholderTextColor="gray"
+                      value={itemTitle}
+                      onChangeText={setItemTitle}
+                  />
+                  <TextInput
+                      style={styles.subItemTextInput}
+                      placeholder="Extra item information"
+                      placeholderTextColor="gray"
+                      value={itemInfo}
+                      onChangeText={setItemInfo}
+                  />
+                </View>
+            )}
+            {!visibleAddItemModal ? (
+                <TouchableOpacity
+                    style={styles.addItemButton}
+                    onPress={() => {
+                      setVisibleAddItemModal(!visibleAddItemModal);
+                    }}>
+                  <Text style={styles.buttonText}>+</Text>
+                </TouchableOpacity>
+            ) : (
+                <TouchableOpacity
+                    style={styles.addItemButton}
+                    onPress={
+                      userId !== null ? handleAddItem : () => setVisibleAddItemModal
+                    }>
+                  <Text style={styles.buttonText}>+</Text>
+                </TouchableOpacity>
+            )}
+          </View>
+        </BottomSheet>
+      </View>
   );
 };
 
@@ -212,13 +185,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f68b45',
     padding: 30,
-    // shadowColor: '#000',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // shadowOpacity: 0.22,
-    // shadowRadius: 2.22,
     elevation: 3,
     marginBottom: 10,
     marginRight: '18%',
@@ -232,13 +198,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f68b45',
     padding: 30,
-    // shadowColor: '#000',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // shadowOpacity: 0.22,
-    // shadowRadius: 2.22,
     elevation: 3,
     marginRight: '18%',
     color: '#f68b45',
@@ -253,13 +212,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f68b45',
     marginLeft: 10,
-    // shadowColor: '#000',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // shadowOpacity: 0.22,
-    // shadowRadius: 2.22,
     elevation: 3,
     position: 'absolute',
     bottom: 0,
@@ -269,16 +221,7 @@ const styles = StyleSheet.create({
     color: '#f68b45',
     fontSize: 30,
   },
-  bottomSheet: {
-    // shadowColor: '#000',
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // shadowOpacity: 0.22,
-    // shadowRadius: 2.22,
-    // elevation: 3,
-  },
+  bottomSheet: {},
 });
 
 export default GroceriesTab;
