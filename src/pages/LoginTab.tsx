@@ -9,23 +9,20 @@ interface TabBarProps {
   onItemSelected: (index: number) => void;
 }
 
-
-
 const LoginTab: React.FC<TabBarProps> = ({onItemSelected}) => {
-
 
   const [username, setUsername] = useState('');
   const [unhashedPassword, setUnhashedPassword] = useState('');
 
   const handleLogin = async () => {
     if (username === '' || unhashedPassword === '') {
-      Alert.alert('Please fill in all fields');
+      Alert.alert('Please fill all fields');
     } else {
       try {
         const password = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, unhashedPassword);
         const credentials = {username, password};
-
-        const response = await fetch('https://s3individueelapi.azurewebsites.net/api/user/login', {
+        console.log(credentials)
+        const response = await fetch('http://localhost:3000/api/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

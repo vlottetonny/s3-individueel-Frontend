@@ -8,6 +8,7 @@ import ProfileTab from "./src/pages/ProfileTab";
 import SettingsTab from "./src/pages/SettingsTab";
 import LoginTab from "./src/pages/LoginTab";
 import SignUpTab from "./src/pages/SignUpTab";
+import JoinOrCreateTab from "./src/pages/JoinOrCreateTab";
 
 const App: React.FC = () => {
 
@@ -39,9 +40,12 @@ const App: React.FC = () => {
                 <LoginTab onItemSelected={handleTabPress} selectedIndex={selectedIndex}/>
             )}
             {selectedIndex === 5 && (
-            <SignUpTab/>
+                <SignUpTab onItemSelected={handleTabPress} selectedIndex={selectedIndex}/>
             )}
-            {selectedIndex !== 4 && selectedIndex !== 5  && (<TabBar selectedIndex={selectedIndex} onItemSelected={handleTabPress} />)}
+            {selectedIndex === 6 && (
+                <JoinOrCreateTab onItemSelected={handleTabPress} selectedIndex={selectedIndex}/>
+            )}
+            {selectedIndex !== 3 && selectedIndex !== 4 && selectedIndex !== 5  && selectedIndex !== 6 && (<TabBar selectedIndex={selectedIndex} onItemSelected={handleTabPress} />)}
         </View>
     );
 };
