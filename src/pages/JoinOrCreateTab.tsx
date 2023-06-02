@@ -117,11 +117,24 @@ const JoinOrCreateTab: React.FC<TabBarProps> = ({onItemSelected}) => {
             });
 
             const data = await response.json();
-            console.log(data);
+            console.log(JSON.stringify(data));
             if (data.success) {
                 console.log('Household joined successfully.');
                 if (signingUp) {
                     await setupHousehold(data.householdId)
+                } else {
+                    console.log("data.householdId " + data.householdId)
+                    const response2 = await fetch(`http://localhost:3000/api/grocerylist/current/get/${data.householdId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    const data2 = await response2.json();
+                    console.log(JSON.stringify("data2 " + data2));
+                    if (data2) {
+                        //await AsyncStorage.setItem('currentGroceryListId', data2.id.toString());
+                    }
                 }
                 await AsyncStorage.setItem('household_id', data.householdId.toString());
                 onItemSelected(1);
