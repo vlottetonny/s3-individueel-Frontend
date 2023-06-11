@@ -35,7 +35,7 @@ const GroceriesTab = () => {
         const listId = await AsyncStorage.getItem('currentGroceryListId');
         setCurrentGroceryListId(listId as string);
         // Make API request using the listId to fetch groceries data
-        const response = await fetch(`http://localhost:3000/api/grocerylist/get/${listId}`);
+        const response = await fetch(`https://s3individueelapi.azurewebsites.net/api/grocerylist/get/${listId}`);
         const data = await response.json();
         console.log(data);
         setGroceries(data.items);
@@ -56,7 +56,7 @@ const GroceriesTab = () => {
         grocery_list_id: await AsyncStorage.getItem('currentGroceryListId') as string,
       };
 
-      const response = await fetch('http://localhost:3000/api/groceryitem/add', {
+      const response = await fetch('https://s3individueelapi.azurewebsites.net/api/groceryitem/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const GroceriesTab = () => {
       try {
         const listId = await AsyncStorage.getItem('currentGroceryListId');
         setCurrentGroceryListId(listId as string);
-        const response = await fetch(`http://localhost:3000/api/grocerylist/get/${listId}`);
+        const response = await fetch(`https://s3individueelapi.azurewebsites.net/api/grocerylist/get/${listId}`);
         const data = await response.json();
         setGroceries(data.items);
       } catch (error) {

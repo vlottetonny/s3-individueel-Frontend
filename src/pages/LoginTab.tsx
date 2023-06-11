@@ -22,7 +22,7 @@ const LoginTab: React.FC<TabBarProps> = ({onItemSelected}) => {
         const password = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, unhashedPassword);
         const credentials = {username, password};
         console.log(credentials)
-        const response = await fetch('http://localhost:3000/api/user/login', {
+        const response = await fetch('https://s3individueelapi.azurewebsites.net/api/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

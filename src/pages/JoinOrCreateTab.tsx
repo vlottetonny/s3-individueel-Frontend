@@ -32,7 +32,7 @@ const JoinOrCreateTab: React.FC<TabBarProps> = ({onItemSelected}) => {
                     const household_creator_id = parseInt(user_id ?? '', 10);
                     console.log(household_creator_id);
                     const credentials = { name, password, household_creator_id };
-                    const response = await fetch('http://localhost:3000/api/household/add', {
+                    const response = await fetch('https://s3individueelapi.azurewebsites.net/api/household/add', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const JoinOrCreateTab: React.FC<TabBarProps> = ({onItemSelected}) => {
 
     const setupHousehold = async (household_id: number) => {
         try {
-            const response = await fetch(`http://localhost:3000/api/grocerylist/add`, {
+            const response = await fetch(`https://s3individueelapi.azurewebsites.net/api/grocerylist/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ const JoinOrCreateTab: React.FC<TabBarProps> = ({onItemSelected}) => {
             const id = await AsyncStorage.getItem('userId');
             const credentials = {id, name, password};
             console.log(credentials);
-            const response = await fetch(`http://localhost:3000/api/user/addtohousehold/${id}`, {
+            const response = await fetch(`https://s3individueelapi.azurewebsites.net/api/user/addtohousehold/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ const JoinOrCreateTab: React.FC<TabBarProps> = ({onItemSelected}) => {
                     await setupHousehold(data.householdId)
                 } else {
                     console.log("data.householdId " + data.householdId)
-                    const response2 = await fetch(`http://localhost:3000/api/grocerylist/current/get/${data.householdId}`, {
+                    const response2 = await fetch(`https://s3individueelapi.azurewebsites.net/api/grocerylist/current/get/${data.householdId}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
